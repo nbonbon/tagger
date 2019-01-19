@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.28307.168
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tagger", "Tagger\Tagger.csproj", "{62C431B1-D763-48D1-AE32-CF2110DE96E7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaggerUnitTest", "TaggerUnitTest\TaggerUnitTest.csproj", "{0CAB6BA6-7BA2-4E55-B72E-8F21240215FF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{62C431B1-D763-48D1-AE32-CF2110DE96E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{62C431B1-D763-48D1-AE32-CF2110DE96E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{62C431B1-D763-48D1-AE32-CF2110DE96E7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0CAB6BA6-7BA2-4E55-B72E-8F21240215FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0CAB6BA6-7BA2-4E55-B72E-8F21240215FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0CAB6BA6-7BA2-4E55-B72E-8F21240215FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0CAB6BA6-7BA2-4E55-B72E-8F21240215FF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
