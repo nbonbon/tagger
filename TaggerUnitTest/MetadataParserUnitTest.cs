@@ -8,108 +8,96 @@ namespace TaggerUnitTest
     public class MetadataParserUnitTest
     {
         [TestMethod]
-        public void ParseShouldParseVersion()
+        public void ParseShouldParseAllMetadata()
         {
-            // Arrange
             const string mockFilepath = @"c:\test.mp3";
-            byte[] mockFileData = new byte[] { 0x49, 0x44, 0x33, 0x03, 0x01, 0x00 };
+            byte[] mockFileData = new byte[] { 0x49, 0x44, 0x33, 0x03, 0x00, 0xE0, 0x00, 0x00, 0x02, 0x01 };
             Moq.Mock<IFileSystem> filesystemMock = new Moq.Mock<IFileSystem>();
             filesystemMock.Setup(x => x.File.ReadAllBytes(mockFilepath)).Returns(mockFileData);
             filesystemMock.Setup(x => x.File.Exists(mockFilepath)).Returns(true);
 
             MetadataParser parser = new MetadataParser(filesystemMock.Object, mockFilepath);
             Id3Metadata metadata = parser.Parse();
+            Assert.AreEqual("2.3.0", metadata.Version);
+            Assert.IsTrue(metadata.IsUnsynchronisationUsed);
+            Assert.IsTrue(metadata.ContainsExtendedHeader);
+            Assert.IsTrue(metadata.IsExperimentalStage);
+            Assert.AreEqual(257, metadata.TagSize);
+        }
+
+        [TestMethod]
+        public void ParseVersionShouldParseVersion()
+        {
+            byte[] mockData = new byte[] { 0x49, 0x44, 0x33, 0x03, 0x01};
+            Id3Metadata metadata = new Id3Metadata();
+            MetadataParser.ParseVersion(metadata, mockData);
             Assert.AreEqual("2.3.1", metadata.Version);
         }
 
         [TestMethod]
-        public void ParseShouldParseUnsynchronizationFlagAsTrueIfSet()
+        public void ParseFlagsShouldParseUnsynchronizationFlagAsTrueIfSet()
         {
-            // Arrange
-            const string mockFilepath = @"c:\test.mp3";
-            byte[] mockFileData = new byte[] { 0x49, 0x44, 0x33, 0x03, 0x01, 0x80 };
-            Moq.Mock<IFileSystem> filesystemMock = new Moq.Mock<IFileSystem>();
-            filesystemMock.Setup(x => x.File.ReadAllBytes(mockFilepath)).Returns(mockFileData);
-            filesystemMock.Setup(x => x.File.Exists(mockFilepath)).Returns(true);
-
-            MetadataParser parser = new MetadataParser(filesystemMock.Object, mockFilepath);
-            Id3Metadata metadata = parser.Parse();
-            Assert.IsTrue(metadata.isUnsynchronisationUsed);
+            byte[] mockData = new byte[] { 0x49, 0x44, 0x33, 0x03, 0x01, 0x80 };
+            Id3Metadata metadata = new Id3Metadata();
+            MetadataParser.ParseFlags(metadata, mockData);
+            Assert.IsTrue(metadata.IsUnsynchronisationUsed);
         }
 
         [TestMethod]
-        public void ParseShouldParseUnsynchronizationFlagAsFalseIfNotSet()
+        public void ParseFlagsShouldParseUnsynchronizationFlagAsFalseIfNotSet()
         {
-            // Arrange
-            const string mockFilepath = @"c:\test.mp3";
-            byte[] mockFileData = new byte[] { 0x49, 0x44, 0x33, 0x03, 0x01, 0x70 };
-            Moq.Mock<IFileSystem> filesystemMock = new Moq.Mock<IFileSystem>();
-            filesystemMock.Setup(x => x.File.ReadAllBytes(mockFilepath)).Returns(mockFileData);
-            filesystemMock.Setup(x => x.File.Exists(mockFilepath)).Returns(true);
-
-            MetadataParser parser = new MetadataParser(filesystemMock.Object, mockFilepath);
-            Id3Metadata metadata = parser.Parse();
-            Assert.IsFalse(metadata.isUnsynchronisationUsed);
+            byte[] mockData = new byte[] { 0x49, 0x44, 0x33, 0x03, 0x01, 0x70 };
+            Id3Metadata metadata = new Id3Metadata();
+            metadata.IsUnsynchronisationUsed = true;
+            MetadataParser.ParseFlags(metadata, mockData);
+            Assert.IsFalse(metadata.IsUnsynchronisationUsed);
         }
 
         [TestMethod]
-        public void ParseShouldParseExtendedHeaderFlagAsTrueIfSet()
+        public void ParseFlagsShouldParseExtendedHeaderFlagAsTrueIfSet()
         {
-            // Arrange
-            const string mockFilepath = @"c:\test.mp3";
-            byte[] mockFileData = new byte[] { 0x49, 0x44, 0x33, 0x03, 0x01, 0x40 };
-            Moq.Mock<IFileSystem> filesystemMock = new Moq.Mock<IFileSystem>();
-            filesystemMock.Setup(x => x.File.ReadAllBytes(mockFilepath)).Returns(mockFileData);
-            filesystemMock.Setup(x => x.File.Exists(mockFilepath)).Returns(true);
-
-            MetadataParser parser = new MetadataParser(filesystemMock.Object, mockFilepath);
-            Id3Metadata metadata = parser.Parse();
-            Assert.IsTrue(metadata.containsExtendedHeader);
+            byte[] mockData = new byte[] { 0x49, 0x44, 0x33, 0x03, 0x01, 0x40 };
+            Id3Metadata metadata = new Id3Metadata();
+            MetadataParser.ParseFlags(metadata, mockData);
+            Assert.IsTrue(metadata.ContainsExtendedHeader);
         }
 
         [TestMethod]
-        public void ParseShouldParseExtendedHeaderFlagAsFalseIfNotSet()
+        public void ParseFlagsShouldParseExtendedHeaderFlagAsFalseIfNotSet()
         {
-            // Arrange
-            const string mockFilepath = @"c:\test.mp3";
-            byte[] mockFileData = new byte[] { 0x49, 0x44, 0x33, 0x03, 0x01, 0x30 };
-            Moq.Mock<IFileSystem> filesystemMock = new Moq.Mock<IFileSystem>();
-            filesystemMock.Setup(x => x.File.ReadAllBytes(mockFilepath)).Returns(mockFileData);
-            filesystemMock.Setup(x => x.File.Exists(mockFilepath)).Returns(true);
-
-            MetadataParser parser = new MetadataParser(filesystemMock.Object, mockFilepath);
-            Id3Metadata metadata = parser.Parse();
-            Assert.IsFalse(metadata.containsExtendedHeader);
+            byte[] mockData = new byte[] { 0x49, 0x44, 0x33, 0x03, 0x01, 0x30 };
+            Id3Metadata metadata = new Id3Metadata();
+            metadata.IsUnsynchronisationUsed = true;
+            MetadataParser.ParseFlags(metadata, mockData);
+            Assert.IsFalse(metadata.ContainsExtendedHeader);
         }
 
         [TestMethod]
-        public void ParseShouldParseExperimentalIndicatorFlagAsTrueIfSet()
+        public void ParseFlagsShouldParseExperimentalIndicatorFlagAsTrueIfSet()
         {
-            // Arrange
-            const string mockFilepath = @"c:\test.mp3";
-            byte[] mockFileData = new byte[] { 0x49, 0x44, 0x33, 0x03, 0x01, 0x20 };
-            Moq.Mock<IFileSystem> filesystemMock = new Moq.Mock<IFileSystem>();
-            filesystemMock.Setup(x => x.File.ReadAllBytes(mockFilepath)).Returns(mockFileData);
-            filesystemMock.Setup(x => x.File.Exists(mockFilepath)).Returns(true);
-
-            MetadataParser parser = new MetadataParser(filesystemMock.Object, mockFilepath);
-            Id3Metadata metadata = parser.Parse();
-            Assert.IsTrue(metadata.isExperimentalStage);
+            byte[] mockData = new byte[] { 0x49, 0x44, 0x33, 0x03, 0x01, 0x20 };
+            Id3Metadata metadata = new Id3Metadata();
+            MetadataParser.ParseFlags(metadata, mockData);
+            Assert.IsTrue(metadata.IsExperimentalStage);
         }
 
         [TestMethod]
-        public void ParseShouldParseExperimentalIndicatorFlagAsFalseIfNotSet()
+        public void ParseFlagsShouldParseExperimentalIndicatorFlagAsFalseIfNotSet()
         {
-            // Arrange
-            const string mockFilepath = @"c:\test.mp3";
-            byte[] mockFileData = new byte[] { 0x49, 0x44, 0x33, 0x03, 0x01, 0x1F };
-            Moq.Mock<IFileSystem> filesystemMock = new Moq.Mock<IFileSystem>();
-            filesystemMock.Setup(x => x.File.ReadAllBytes(mockFilepath)).Returns(mockFileData);
-            filesystemMock.Setup(x => x.File.Exists(mockFilepath)).Returns(true);
+            byte[] mockData = new byte[] { 0x49, 0x44, 0x33, 0x03, 0x01, 0x1F };
+            Id3Metadata metadata = new Id3Metadata();
+            metadata.IsUnsynchronisationUsed = true;
+            MetadataParser.ParseFlags(metadata, mockData);
+            Assert.IsFalse(metadata.IsExperimentalStage);
+        }
 
-            MetadataParser parser = new MetadataParser(filesystemMock.Object, mockFilepath);
-            Id3Metadata metadata = parser.Parse();
-            Assert.IsFalse(metadata.isExperimentalStage);
+        [TestMethod]
+        public void ParseSizeShouldParseTagSize()
+        {
+            byte[] mockData = new byte[] { 0x49, 0x44, 0x33, 0x03, 0x01, 0x1F, 0x00, 0x00, 0x02, 0x01 };
+            Id3Metadata metadata = new Id3Metadata();
+            MetadataParser.ParseTagSize(metadata, mockData);
+            Assert.AreEqual(257, metadata.TagSize);
         }
     }
 }

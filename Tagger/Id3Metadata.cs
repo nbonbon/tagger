@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Tagger
+﻿namespace Tagger
 {
     public class Id3Metadata
     {
@@ -22,8 +16,9 @@ namespace Tagger
             private set{ }
         }
 
-        public bool isUnsynchronisationUsed { get; set; }
-        public bool containsExtendedHeader { get; set; }
-        public bool isExperimentalStage { get; set; }
+        public bool IsUnsynchronisationUsed { get; set; }
+        public bool ContainsExtendedHeader { get; set; }
+        public bool IsExperimentalStage { get; set; }
+        public int TagSize { get; set; }
     }
 }
