@@ -118,21 +118,7 @@ namespace Tagger
 
         public static void ParseTagSize(Id3Metadata metadata, byte[] fileData)
         {
-            int result = 0;
-            byte[] tagSizeBytes = new byte[4];
-            Buffer.BlockCopy(fileData, 6, tagSizeBytes, 0, 4);
-            BitArray tagSizeBits = new BitArray(tagSizeBytes);
-            PopulateTagSizeBitKey();
-
-            for (int i = 0; i < tagSizeBits.Length; i++)
-            {
-                if (tagSizeBits[i])
-                {
-                    result += (int)tagSizeBitKey[i];
-                }
-            }
-
-            metadata.TagSize= result;
+            metadata.TagSize = (((fileData[6] & 0x7F) << 25) | ((fileData[7] & 0x7F) << 18) | ((fileData[8] & 0x7F) << 11) | ((fileData[9] & 0x7F) << 4)) >> 4;
         }
     }
 }
