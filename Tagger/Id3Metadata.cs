@@ -19,6 +19,18 @@
         public bool IsUnsynchronisationUsed { get; set; }
         public bool ContainsExtendedHeader { get; set; }
         public bool IsExperimentalStage { get; set; }
-        public int TagSize { get; set; }
+        public uint TagSize { get; set; }
+        public ExtendedHeader ExtendedHeader { get; set; }
+
+        public override string ToString()
+        {
+            string result = string.Empty;
+            result += "Version: " + Version;
+            result += "ContainsExtendedHeader: " + ContainsExtendedHeader;
+            result += "IsExperimentalStage: " + IsExperimentalStage;
+            result += "TagSize: " + TagSize;
+            result += ExtendedHeader.ToString();
+            return result;
+        }
     }
 }
