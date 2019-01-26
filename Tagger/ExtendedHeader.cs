@@ -13,7 +13,7 @@ namespace Tagger
         public override string ToString()
         {
             string result = string.Empty;
-            result += "ExtendedHeaderSize: " + ExtendedHeaderSize;
+            result += "ExtendedHeaderSize: " + ExtendedHeaderSize + Environment.NewLine;
             return result;
         }
     }
