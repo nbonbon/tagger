@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Text;
 
 namespace Tagger
 {
     public class Id3Metadata
     {
         private byte[] fileData;
+        private static Encoding textEnconding = Encoding.GetEncoding("iso-8859-1");
 
         public Id3Metadata(byte[] fileData)
         {
@@ -45,7 +47,7 @@ namespace Tagger
 
         public static bool isID3v2(byte[] fileData)
         {
-            return System.Text.Encoding.ASCII.GetString(fileData, 0, 3).ToUpper() == "ID3";
+            return textEnconding.GetString(fileData, 0, 3).ToUpper() == "ID3";
         }
 
         public void Parse()
@@ -54,8 +56,8 @@ namespace Tagger
 
             if (ContainsExtendedHeader)
             {
-                ExtendedHeader = new ExtendedHeader();
-                ParseExtendedHeaderSize();
+                ExtendedHeader = new ExtendedHeader(this.fileData);
+                ExtendedHeader.Parse();
             }
         }
 
@@ -89,14 +91,6 @@ namespace Tagger
         public  void ParseTagSize()
         {
             TagSize = (uint)(((fileData[6] & 0x7F) << 25) | ((fileData[7] & 0x7F) << 18) | ((fileData[8] & 0x7F) << 11) | ((fileData[9] & 0x7F) << 4)) >> 4;
-        }
-
-        public void ParseExtendedHeaderSize()
-        {
-            if (ExtendedHeader != null)
-            {
-                ExtendedHeader.ExtendedHeaderSize = (uint)((uint)fileData[10] << 24) | ((uint)fileData[11] << 16) | ((uint)fileData[12] << 8) | (uint)fileData[13];
-            }
         }
     }
 }
