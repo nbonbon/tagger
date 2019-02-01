@@ -25,7 +25,7 @@ namespace Tagger
             {
                 byte[] fileData = this.fileSystem.File.ReadAllBytes(this.filepath);
 
-                if (Id3Metadata.isID3v2(fileData))
+                if (TagIdUtil.isID3v2(fileData))
                 {
                     metadata = new Id3Metadata(fileData);
                     metadata.Parse();
