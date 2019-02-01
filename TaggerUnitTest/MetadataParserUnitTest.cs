@@ -11,7 +11,7 @@ namespace TaggerUnitTest
         public void ParseShouldParseAllMetadata()
         {
             const string mockFilepath = @"c:\test.mp3";
-            byte[] mockFileData = new byte[] { 0x49, 0x44, 0x33, 0x03, 0x00, 0xE0, 0x00, 0x00, 0x02, 0x01, 0x00, 0x00, 0x00, 0x0A };
+            byte[] mockFileData = new byte[] { 0x49, 0x44, 0x33, 0x03, 0x00, 0xE0, 0x00, 0x00, 0x02, 0x01, 0x00, 0x00, 0x00, 0x0A, 0x00, 0x00, 0x00, 0x00, 0x00, 0x30 };
             Moq.Mock<IFileSystem> filesystemMock = new Moq.Mock<IFileSystem>();
             filesystemMock.Setup(x => x.File.ReadAllBytes(mockFilepath)).Returns(mockFileData);
             filesystemMock.Setup(x => x.File.Exists(mockFilepath)).Returns(true);
@@ -24,6 +24,8 @@ namespace TaggerUnitTest
             Assert.IsTrue(metadata.IsExperimentalStage);
             Assert.AreEqual((uint)257, metadata.TagSize);
             Assert.AreEqual((uint)10, metadata.ExtendedHeader.ExtendedHeaderSize);
+            Assert.AreEqual(false, metadata.ExtendedHeader.IsCrcDataPresent);
+            Assert.AreEqual((uint)48, metadata.ExtendedHeader.SizeOfPadding);
         }
     }
 }

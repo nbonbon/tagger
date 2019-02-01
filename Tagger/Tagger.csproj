@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BitUtil.cs" />
     <Compile Include="ExtendedHeader.cs" />
     <Compile Include="Id3Metadata.cs" />
     <Compile Include="MetadataParser.cs" />

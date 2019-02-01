@@ -68,27 +68,22 @@ namespace Tagger
             ParseTagSize();
         }
 
-        public void ParseVersion()
+        private void ParseVersion()
         {
             VersionMajor = 2;
             VersionMinor = fileData[3];
             VersionRevision = fileData[4];
         }
 
-        public void ParseFlags()
+        private void ParseFlags()
         {
             byte flagByte = fileData[5];
-            IsUnsynchronisationUsed = IsBitSet(flagByte, 7);
-            ContainsExtendedHeader = IsBitSet(flagByte, 6);
-            IsExperimentalStage = IsBitSet(flagByte, 5);
+            IsUnsynchronisationUsed = BitUtil.IsBitSet(flagByte, 7);
+            ContainsExtendedHeader = BitUtil.IsBitSet(flagByte, 6);
+            IsExperimentalStage = BitUtil.IsBitSet(flagByte, 5);
         }
 
-        private static bool IsBitSet(byte byteToSearch, int bitNumberToCheck)
-        {
-            return (byteToSearch & (1 << bitNumberToCheck)) != 0;
-        }
-
-        public  void ParseTagSize()
+        private void ParseTagSize()
         {
             TagSize = (uint)(((fileData[6] & 0x7F) << 25) | ((fileData[7] & 0x7F) << 18) | ((fileData[8] & 0x7F) << 11) | ((fileData[9] & 0x7F) << 4)) >> 4;
         }
