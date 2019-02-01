@@ -7,7 +7,7 @@ namespace TaggerUnitTest
     public class Id3MetadataUnitTest
     {
         [TestMethod]
-        public void ParseVersionShouldParseVersion()
+        public void ParseShouldParseVersion()
         {
             byte[] mockData = new byte[] { 0x49, 0x44, 0x33, 0x03, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00 };
             Id3Metadata metadata = new Id3Metadata(mockData);
@@ -16,7 +16,7 @@ namespace TaggerUnitTest
         }
 
         [TestMethod]
-        public void ParseFlagsShouldParseUnsynchronizationFlagAsTrueIfSet()
+        public void ParseShouldParseUnsynchronizationFlagAsTrueIfSet()
         {
             byte[] mockData = new byte[] { 0x49, 0x44, 0x33, 0x03, 0x01, 0x80, 0x00, 0x00, 0x00, 0x00 };
             Id3Metadata metadata = new Id3Metadata(mockData);
@@ -25,7 +25,7 @@ namespace TaggerUnitTest
         }
 
         [TestMethod]
-        public void ParseFlagsShouldParseUnsynchronizationFlagAsFalseIfNotSet()
+        public void ParseShouldParseUnsynchronizationFlagAsFalseIfNotSet()
         {
             byte[] mockData = new byte[] { 0x49, 0x44, 0x33, 0x03, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00 };
             Id3Metadata metadata = new Id3Metadata(mockData);
@@ -35,7 +35,7 @@ namespace TaggerUnitTest
         }
 
         [TestMethod]
-        public void ParseFlagsShouldParseExtendedHeaderFlagAsTrueIfSet()
+        public void ParseShouldParseExtendedHeaderFlagAsTrueIfSet()
         {
             byte[] mockData = new byte[] { 0x49, 0x44, 0x33, 0x03, 0x01, 0x40, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x0A, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
             Id3Metadata metadata = new Id3Metadata(mockData);
@@ -44,7 +44,7 @@ namespace TaggerUnitTest
         }
 
         [TestMethod]
-        public void ParseFlagsShouldParseExtendedHeaderFlagAsFalseIfNotSet()
+        public void ParseShouldParseExtendedHeaderFlagAsFalseIfNotSet()
         {
             byte[] mockData = new byte[] { 0x49, 0x44, 0x33, 0x03, 0x01, 0x30, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x0A };
             Id3Metadata metadata = new Id3Metadata(mockData);
@@ -55,7 +55,7 @@ namespace TaggerUnitTest
         }
 
         [TestMethod]
-        public void ParseFlagsShouldParseExperimentalIndicatorFlagAsTrueIfSet()
+        public void ParseShouldParseExperimentalIndicatorFlagAsTrueIfSet()
         {
             byte[] mockData = new byte[] { 0x49, 0x44, 0x33, 0x03, 0x01, 0x20, 0x00, 0x00, 0x00, 0x00 };
             Id3Metadata metadata = new Id3Metadata(mockData);
@@ -64,7 +64,7 @@ namespace TaggerUnitTest
         }
 
         [TestMethod]
-        public void ParseFlagsShouldParseExperimentalIndicatorFlagAsFalseIfNotSet()
+        public void ParseShouldParseExperimentalIndicatorFlagAsFalseIfNotSet()
         {
             byte[] mockData = new byte[] { 0x49, 0x44, 0x33, 0x03, 0x01, 0x1F, 0x00, 0x00, 0x00, 0x00 };
             Id3Metadata metadata = new Id3Metadata(mockData);
@@ -74,7 +74,7 @@ namespace TaggerUnitTest
         }
 
         [TestMethod]
-        public void ParseSizeShouldParseTagSize()
+        public void ParseShouldParseTagSize()
         {
             byte[] mockData = new byte[] { 0x49, 0x44, 0x33, 0x03, 0x01, 0x1F, 0x00, 0x00, 0x02, 0x01 };
             Id3Metadata metadata = new Id3Metadata(mockData);
