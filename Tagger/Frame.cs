@@ -10,11 +10,13 @@ namespace Tagger
     {
         private int byteOffset = -1;
         private const int FRAME_ID_SIZE = 4;
+        private const int FRAME_SIZE_SIZE = 4;
 
         private byte[] fileData;
         private static Encoding textEnconding = Encoding.GetEncoding("iso-8859-1");
 
         public string FrameId { get; set; }
+        public int Size { get; set; }
 
         public Frame(byte[] fileData, int byteOffset)
         {
@@ -50,8 +52,11 @@ namespace Tagger
 
         private void ParseFrameSize()
         {
-            //TO DO: Implement Me
-            byteOffset += 4;
+            byte[] sizeBytes = new byte[4];
+            Buffer.BlockCopy(fileData, byteOffset, sizeBytes, 0, 4);
+            Array.Reverse(sizeBytes);
+            Size = BitConverter.ToInt32(sizeBytes, 0);
+            byteOffset += FRAME_SIZE_SIZE;
         }
 
         private void ParseFrameId()
