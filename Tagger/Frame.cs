@@ -41,6 +41,13 @@ namespace Tagger
         {
             string result = string.Empty;
             result += "Frame Id: " + FrameId + Environment.NewLine;
+            result += "Frame Size: " + Size + Environment.NewLine;
+            result += "Frame TagAlterPreservation: " + TagAlterPreservation + Environment.NewLine;
+            result += "Frame FileAlterPreservation: " + FileAlterPreservation + Environment.NewLine;
+            result += "Frame Compression: " + Compression + Environment.NewLine;
+            result += "Frame Encryption: " + Encryption + Environment.NewLine;
+            result += "Frame GroupIdentity: " + GroupIdentity + Environment.NewLine;
+            result += "Frame ReadOnly: " + ReadOnly + Environment.NewLine;
             return result;
         }
 
