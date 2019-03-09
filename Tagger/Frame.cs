@@ -16,7 +16,7 @@ namespace Tagger
         private static Encoding textEnconding = Encoding.GetEncoding("iso-8859-1");
 
         public string FrameId { get; set; }
-        public int Size { get; set; }
+        public uint Size { get; set; }
         public bool TagAlterPreservation { get; set; }
         public bool FileAlterPreservation { get; set; }
         public bool Compression { get; set; }
@@ -79,10 +79,7 @@ namespace Tagger
 
         private void ParseFrameSize()
         {
-            byte[] sizeBytes = new byte[4];
-            Buffer.BlockCopy(fileData, byteOffset, sizeBytes, 0, 4);
-            Array.Reverse(sizeBytes);
-            Size = BitConverter.ToInt32(sizeBytes, 0);
+            Size = BitUtil.ParseBigEndianUint32(fileData, byteOffset);
             byteOffset += FRAME_SIZE_SIZE;
         }
 

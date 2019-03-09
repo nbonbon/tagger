@@ -43,7 +43,7 @@ namespace TaggerUnitTest
             };
             Frame frame = new Frame(mockData, 10);
             frame.Parse();
-            Assert.AreEqual(12, frame.Size);
+            Assert.AreEqual((uint)12, frame.Size);
         }
 
         [TestMethod]

@@ -49,7 +49,7 @@ namespace Tagger
 
         private void ParseExtendedHeaderSize()
         {
-            this.ExtendedHeaderSize = (uint)((uint)fileData[10] << 24) | ((uint)fileData[11] << 16) | ((uint)fileData[12] << 8) | (uint)fileData[13];
+            this.ExtendedHeaderSize = BitUtil.ParseBigEndianUint32(fileData, 10);
         }
 
         private void ParseCrcFlag()
@@ -59,7 +59,7 @@ namespace Tagger
 
         private void ParseSizeOfPadding()
         {
-            this.SizeOfPadding = (uint)((uint)fileData[16] << 24) | ((uint)fileData[17] << 16) | ((uint)fileData[18] << 8) | (uint)fileData[19];
+            this.SizeOfPadding = BitUtil.ParseBigEndianUint32(fileData, 16);
         }
     }
 }
