@@ -26,6 +26,11 @@ namespace Tagger
         public bool IsUnsynchronisationUsed { get; set; }
         public bool ContainsExtendedHeader { get; set; }
         public bool IsExperimentalStage { get; set; }
+
+        /// <summary>
+        /// The ID3v2 tag size is the size of the complete tag after unsychronisation, including padding, excluding the
+        /// header but not excluding the extended header(total tag size - 10).
+        /// </summary>
         public uint TagSize { get; set; }
         public ExtendedHeader ExtendedHeader { get; set; }
         public string LeadArtist { get; set; }
