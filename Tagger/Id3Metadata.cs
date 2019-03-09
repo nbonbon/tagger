@@ -85,18 +85,6 @@ namespace Tagger
 
             Frame frame = new Frame(fileData, byteOffset);
             byteOffset = frame.Parse();
-            switch (frame.FrameId)
-            {
-                case "TPE1":
-                    ParseLeadArtist();
-                    break;
-            } 
-        }
-
-        private void ParseLeadArtist()
-        {
-            int textDataSize = 12 - 1;
-            LeadArtist = textEnconding.GetString(fileData, 21, textDataSize);
         }
 
         private void ParseHeader()

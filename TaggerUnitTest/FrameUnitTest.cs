@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Tagger;
+using Moq;
 
 namespace TaggerUnitTest
 {
@@ -15,15 +16,16 @@ namespace TaggerUnitTest
                 0x03, 0x01, // id3 version
                 0x1F, // id3 header flags
                 0x00, 0x00, 0x02, 0x01, // id3 tag size
-                0x54, 0x50, 0x45, 0x31, // frame id: TPE1
-                0x00, 0x00, 0x00, 0x0C, // frame size
-                0x00, 0x00, // frame flags
-                0x00, // text frame encoding
-                0x52, 0x69, 0x63, 0x6B, 0x20, 0x41, 0x73, 0x74, 0x6C, 0x65, 0x79 // text frame data: "Rick Astley"
+                0x54, 0x50, 0x45, 0x31, // frame id: TPE1 [10]
+                0x00, 0x00, 0x00, 0x0C, // frame size: 12 (big endian) [14]
+                0x00, 0x00, // frame flags [18]
+                0x00, // text frame encoding [20]
+                0x52, 0x69, 0x63, 0x6B, 0x20, 0x41, 0x73, 0x74, 0x6C, 0x65, 0x79 // text frame data: "Rick Astley" [21]
             };
             Frame frame = new Frame(mockData, 10);
-            frame.Parse();
+            int byteOffset = frame.Parse();
             Assert.AreEqual("TPE1", frame.FrameId);
+            Assert.AreEqual(10 + 10 + 12, byteOffset, "ByteOffset should have been the initial value plus the size of the tag header plus the size of the tag data");
         }
 
         [TestMethod]
@@ -70,6 +72,31 @@ namespace TaggerUnitTest
             Assert.AreEqual(Compression.Compressed, frame.Compression);
             Assert.AreEqual(Encryption.Unencrypted, frame.Encryption);
             Assert.AreEqual(GroupIdentity.ContainsGroupIdentity, frame.GroupIdentity);
+        }
+
+        [TestMethod]
+        public void ParseShouldCallTextInfoFrameParserParse()
+        {
+            byte[] mockData = new byte[]
+            {
+                0x49, 0x44, 0x33, // "ID3"
+                0x03, 0x01, // id3 version
+                0x1F, // id3 header flags
+                0x00, 0x00, 0x02, 0x01, // id3 tag size
+                0x54, 0x50, 0x45, 0x31, // frame id: TPE1
+                0x00, 0x00, 0x00, 0x0C, // frame size: 12 (big endian)
+                0xA0, 0xA0, // frame flags
+                0x00, // text frame encoding
+                0x52, 0x69, 0x63, 0x6B, 0x20, 0x41, 0x73, 0x74, 0x6C, 0x65, 0x79 // text frame data: "Rick Astley"
+            };
+            var mockTextParser = new Mock<ITextInfoFrameParser>();
+            Frame frame = new Frame(mockData, 10, mockTextParser.Object);
+            TextInfoFrame textFrame;
+
+            frame.Parse();
+
+            mockTextParser.Verify(t => t.Initialize(mockData, 20, 12, "TPE1"), Times.Once());
+            mockTextParser.Verify(t => t.Parse(out textFrame), Times.Once());
         }
     }
 }

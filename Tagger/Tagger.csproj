@@ -49,11 +49,14 @@
     <Compile Include="ExtendedHeader.cs" />
     <Compile Include="Frame.cs" />
     <Compile Include="Id3Metadata.cs" />
+    <Compile Include="ITextInfoFrameParser.cs" />
     <Compile Include="MetadataParser.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="FrameHeaderTags.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TagIdUtil.cs" />
+    <Compile Include="TextInfoFrame.cs" />
+    <Compile Include="TextInfoFrameParser.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
