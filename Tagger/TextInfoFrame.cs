@@ -1,8 +1,9 @@
 ﻿namespace Tagger
 {
-    public class TextInfoFrame
+    public class FrameData
     {
-        public string FrameId { get; set; }
+        public string Id { get; set; }
         public string Info { get; set; }
+        public uint Size { get; set; }
     }
 }

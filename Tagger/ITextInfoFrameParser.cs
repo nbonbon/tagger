@@ -2,7 +2,6 @@
 {
     public interface ITextInfoFrameParser
     {
-        void Initialize(byte[] fileData, int byteOffset, uint frameSize, string frameId);
-        int Parse(out TextInfoFrame frame);
+        int Parse(byte[] fileData, int byteOffset, ref FrameData frameData);
     }
 }

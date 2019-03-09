@@ -8,31 +8,25 @@ namespace Tagger
         private const int FRAME_HEADER_ID_SIZE = 4;
         private const int FRAME_HEADER_SIZE_SIZE = 4;
         private const int FRAME_HEADER_FLAGS_SIZE = 2;
+        private const int ENCODING_SIZE = 1;
         private const string USER_DEFINED_TEXT_INFO_FRAME_ID = "TXXX";
 
         private int byteOffset = -1;
         private byte[] fileData;
-        private ITextInfoFrameParser textInfoFrameParser;
         private static Encoding textEnconding = Encoding.GetEncoding("iso-8859-1");
 
-        public string FrameId { get; set; }
-        public uint Size { get; set; }
-        public bool TagAlterPreservation { get; set; }
-        public bool FileAlterPreservation { get; set; }
-        public bool Compression { get; set; }
-        public bool Encryption { get; set; }
-        public bool GroupIdentity { get; set; }
-        public bool ReadOnly { get; set; }
+        public string FrameId { get; private set; }
+        public uint Size { get; private set; }
+        public bool TagAlterPreservation { get; private set; }
+        public bool FileAlterPreservation { get; private set; }
+        public bool Compression { get; private set; }
+        public bool Encryption { get; private set; }
+        public bool GroupIdentity { get; private set; }
+        public bool ReadOnly { get; private set; }
+        public string LeadArtist { get; private set; }
 
         public Frame(byte[] fileData, int byteOffset)
         {
-            this.textInfoFrameParser = new TextInfoFrameParser();
-            Initialize(fileData, byteOffset);
-        }
-
-        public Frame(byte[] fileData, int byteOffset, ITextInfoFrameParser textInfoFrameParser) 
-        {
-            this.textInfoFrameParser = textInfoFrameParser;
             Initialize(fileData, byteOffset);
         }
 
@@ -81,9 +75,17 @@ namespace Tagger
         {
             if (FrameId.ToUpper()[0] == 'T')
             {
-                TextInfoFrame frame;
-                textInfoFrameParser.Initialize(fileData, byteOffset, Size, FrameId);
-                byteOffset = textInfoFrameParser.Parse(out frame);
+                ParseEncoding();
+
+                switch (FrameId)
+                {
+                    case "TPE1":
+                        ParseLeadArtist();
+                        break;
+                    default:
+                        byteOffset += (int)Size;
+                        break;
+                }
             }
             else
             {
@@ -114,6 +116,18 @@ namespace Tagger
         {
             FrameId = textEnconding.GetString(fileData, byteOffset, FRAME_HEADER_ID_SIZE).ToUpper();
             byteOffset += FRAME_HEADER_ID_SIZE;
+        }
+
+        private void ParseEncoding()
+        {
+            byteOffset += ENCODING_SIZE;
+        }
+
+        private void ParseLeadArtist()
+        {
+            int textSize = (int)Size - ENCODING_SIZE;
+            LeadArtist = textEnconding.GetString(fileData, byteOffset, textSize);
+            byteOffset += textSize;
         }
     }
 }

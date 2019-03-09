@@ -56,7 +56,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TagIdUtil.cs" />
     <Compile Include="TextInfoFrame.cs" />
-    <Compile Include="TextInfoFrameParser.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

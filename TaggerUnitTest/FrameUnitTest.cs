@@ -75,7 +75,7 @@ namespace TaggerUnitTest
         }
 
         [TestMethod]
-        public void ParseShouldCallTextInfoFrameParserParse()
+        public void WhenParseIsCalledWithTPE1FrameId_ParseShouldParseTheLeadArtist()
         {
             byte[] mockData = new byte[]
             {
@@ -83,20 +83,16 @@ namespace TaggerUnitTest
                 0x03, 0x01, // id3 version
                 0x1F, // id3 header flags
                 0x00, 0x00, 0x02, 0x01, // id3 tag size
-                0x54, 0x50, 0x45, 0x31, // frame id: TPE1
-                0x00, 0x00, 0x00, 0x0C, // frame size: 12 (big endian)
-                0xA0, 0xA0, // frame flags
-                0x00, // text frame encoding
-                0x52, 0x69, 0x63, 0x6B, 0x20, 0x41, 0x73, 0x74, 0x6C, 0x65, 0x79 // text frame data: "Rick Astley"
+                0x54, 0x50, 0x45, 0x31, // frame id: TPE1 [10]
+                0x00, 0x00, 0x00, 0x0C, // frame size: 12 (big endian) [14]
+                0x00, 0x00, // frame flags [18]
+                0x00, // text frame encoding [20]
+                0x52, 0x69, 0x63, 0x6B, 0x20, 0x41, 0x73, 0x74, 0x6C, 0x65, 0x79 // text frame data: "Rick Astley" [21]
             };
-            var mockTextParser = new Mock<ITextInfoFrameParser>();
-            Frame frame = new Frame(mockData, 10, mockTextParser.Object);
-            TextInfoFrame textFrame;
 
+            Frame frame = new Frame(mockData, 10);
             frame.Parse();
-
-            mockTextParser.Verify(t => t.Initialize(mockData, 20, 12, "TPE1"), Times.Once());
-            mockTextParser.Verify(t => t.Parse(out textFrame), Times.Once());
+            Assert.AreEqual("Rick Astley", frame.LeadArtist);
         }
     }
 }
