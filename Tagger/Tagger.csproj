@@ -51,6 +51,7 @@
     <Compile Include="Id3Metadata.cs" />
     <Compile Include="MetadataParser.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="FrameHeaderTags.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TagIdUtil.cs" />
   </ItemGroup>
