@@ -13,6 +13,7 @@ namespace Tagger
         public byte VersionMajor { get; private set; }
         public byte VersionMinor { get; private set; }
         public byte VersionRevision { get; private set; }
+        public string TagId { get; private set; }
         public Dictionary<string, Frame> Frames { get; private set; }
 
         public string Version
@@ -58,7 +59,14 @@ namespace Tagger
         public bool isID3v2(byte[] fileData)
         {
             byteOffset += 3;
-            return textEnconding.GetString(fileData, 0, 3).ToUpper() == "ID3";
+            TagId = textEnconding.GetString(fileData, 0, 3).ToUpper();
+            return (TagId == "ID3");
+        }
+
+        public bool ValidateTag()
+        {
+            return (fileData[6] < 0x80 && fileData[7] < 0x80 && fileData[8] < 0x80 && fileData[9] < 0x80) &&
+                (fileData[3] < 0xFF && fileData[4] < 0xFF);
         }
 
         public void Parse()
@@ -67,13 +75,16 @@ namespace Tagger
             {
                 ParseHeader();
 
-                if (ContainsExtendedHeader)
+                if (ValidateTag())
                 {
-                    ExtendedHeader = new ExtendedHeader(this.fileData, byteOffset);
-                    byteOffset = ExtendedHeader.Parse();
-                }
+                    if (ContainsExtendedHeader)
+                    {
+                        ExtendedHeader = new ExtendedHeader(this.fileData, byteOffset);
+                        byteOffset = ExtendedHeader.Parse();
+                    }
 
-                ParseFrames();
+                    ParseFrames();
+                }
             }
         }
 
