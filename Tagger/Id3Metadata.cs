@@ -15,6 +15,7 @@ namespace Tagger
         public byte VersionRevision { get; private set; }
         public string TagId { get; private set; }
         public Dictionary<string, Frame> Frames { get; private set; }
+        public bool Valid { get; private set; }
 
         public string Version
         {
@@ -65,26 +66,24 @@ namespace Tagger
 
         public bool ValidateTag()
         {
-            return (fileData[6] < 0x80 && fileData[7] < 0x80 && fileData[8] < 0x80 && fileData[9] < 0x80) &&
+            Valid = (fileData[6] < 0x80 && fileData[7] < 0x80 && fileData[8] < 0x80 && fileData[9] < 0x80) &&
                 (fileData[3] < 0xFF && fileData[4] < 0xFF);
+            return Valid;
         }
 
         public void Parse()
         {
-            if (isID3v2(this.fileData))
+            if (ValidateTag() && isID3v2(this.fileData))
             {
                 ParseHeader();
 
-                if (ValidateTag())
+                if (ContainsExtendedHeader)
                 {
-                    if (ContainsExtendedHeader)
-                    {
-                        ExtendedHeader = new ExtendedHeader(this.fileData, byteOffset);
-                        byteOffset = ExtendedHeader.Parse();
-                    }
-
-                    ParseFrames();
+                    ExtendedHeader = new ExtendedHeader(this.fileData, byteOffset);
+                    byteOffset = ExtendedHeader.Parse();
                 }
+
+                ParseFrames();
             }
         }
 
@@ -112,7 +111,12 @@ namespace Tagger
                     {
                         Console.WriteLine(frame.TextInfoData);
                     }
-
+                }
+                else
+                {
+                    // Break out of loop if we have reached the padding
+                    Valid = false;
+                    break;
                 }
             }
         }

@@ -81,5 +81,23 @@ namespace TaggerUnitTest
             metadata.Parse();
             Assert.AreEqual((uint)257, metadata.TagSize);
         }
+
+        [TestMethod]
+        public void ParseShouldInvalidateTagIfFrameHeaderSizeHasInvalidByte()
+        {
+            byte[] mockData = new byte[] { 0x49, 0x44, 0x33, 0x03, 0x01, 0x1F, 0x80, 0x00, 0x02, 0x01 };
+            Id3Metadata metadata = new Id3Metadata(mockData);
+            metadata.Parse();
+            Assert.AreEqual(false, metadata.Valid);
+        }
+
+        [TestMethod]
+        public void ParseShouldInvalidateTagIfFrameVersionHasInvalidByte()
+        {
+            byte[] mockData = new byte[] { 0x49, 0x44, 0x33, 0xFF, 0x01, 0x1F, 0x80, 0x00, 0x02, 0x01 };
+            Id3Metadata metadata = new Id3Metadata(mockData);
+            metadata.Parse();
+            Assert.AreEqual(false, metadata.Valid);
+        }
     }
 }
