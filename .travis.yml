@@ -1,6 +1,6 @@
 language: csharp
 mono: none
-dotnet: 2.1.502
+dotnet: 4.6.1
 solution: Tagger.sln
 script:
   - dotnet restore
