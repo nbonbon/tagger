@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BitUtil.cs" />
+    <Compile Include="TextEncoding.cs" />
     <Compile Include="ExtendedHeader.cs" />
     <Compile Include="Frame.cs" />
     <Compile Include="Id3Metadata.cs" />

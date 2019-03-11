@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 
 namespace Tagger
@@ -9,9 +10,10 @@ namespace Tagger
         private int byteOffset = -1;
         private static Encoding textEnconding = Encoding.GetEncoding("iso-8859-1");
 
-        public byte VersionMajor { get; set; }
-        public byte VersionMinor { get; set; }
-        public byte VersionRevision { get; set; }
+        public byte VersionMajor { get; private set; }
+        public byte VersionMinor { get; private set; }
+        public byte VersionRevision { get; private set; }
+        public Dictionary<string, Frame> Frames { get; private set; }
 
         public string Version
         {
@@ -33,12 +35,12 @@ namespace Tagger
         /// </summary>
         public uint TagSize { get; set; }
         public ExtendedHeader ExtendedHeader { get; set; }
-        public string LeadArtist { get; set; }
 
         public Id3Metadata(byte[] fileData)
         {
             this.fileData = fileData;
             byteOffset = 0;
+            Frames = new Dictionary<string, Frame>();
         }
 
         public override string ToString()
@@ -50,7 +52,6 @@ namespace Tagger
             result += "IsExperimentalStage: " + IsExperimentalStage + Environment.NewLine;
             result += "TagSize: " + TagSize + Environment.NewLine;
             result += ExtendedHeader != null ? ExtendedHeader.ToString() : string.Empty;
-            result += "LeadArtist: " + LeadArtist + Environment.NewLine;
             return result;
         }
 
@@ -83,8 +84,26 @@ namespace Tagger
                 return;
             }
 
-            Frame frame = new Frame(fileData, byteOffset);
-            byteOffset = frame.Parse();
+            for (int i = byteOffset; i < TagSize;)
+            {
+                Frame frame = new Frame(fileData, byteOffset);
+                i = frame.Parse();
+                byteOffset = i;
+                //Console.WriteLine(frame.ToString());
+
+                if (frame.FrameId != "\0\0\0\0")
+                {
+                    Frames.Add(frame.FrameId, frame);
+
+                    Console.WriteLine(frame.FrameId);
+
+                    if (frame.IsTextInfoFrame)
+                    {
+                        Console.WriteLine(frame.TextInfoData);
+                    }
+
+                }
+            }
         }
 
         private void ParseHeader()
