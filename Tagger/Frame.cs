@@ -26,7 +26,7 @@ namespace Tagger
         public bool ReadOnly { get; private set; }
 
         // Text Info Frame Fields
-        private TextEncoding Encoding { get; set; }
+        public TextEncoding Encoding { get; private set; }
         public string TextInfoData { get; private set; }
         public bool IsTextInfoFrame { get; private set; }
         private Encoding UTF16TextEnconding = System.Text.Encoding.GetEncoding("utf-16");
